@@ -1,0 +1,24 @@
+{
+  "generator-jhipster": {
+    "baseName": "21points",
+    "packageName": "org.jhipster.health",
+    "packageFolder": "org/jhipster/health",
+    "authenticationType": "xauth",
+    "hibernateCache": "ehcache",
+    "clusteredHttpSession": "no",
+    "websocket": "spring-websocket",
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": "elasticsearch",
+    "useSass": false,
+    "buildTool": "gradle",
+    "frontendBuilder": "grunt",
+    "enableTranslation": true,
+    "enableSocialSignIn": false,
+    "rememberMeKey": "da4a7b5d8aec9059e2e62ed556c4cd320bd97c5b",
+    "testFrameworks": [
+      "gatling"
+    ]
+  }
+}
