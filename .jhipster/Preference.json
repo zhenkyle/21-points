@@ -1,0 +1,28 @@
+{
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "weeklyGoal",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": "10",
+            "fieldValidateRulesMax": "21"
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "weightUnits",
+            "fieldType": "Units",
+            "fieldValues": "kg,lb",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160106083345",
+    "dto": "no",
+    "service": "no",
+    "pagination": "infinite-scroll"
+}

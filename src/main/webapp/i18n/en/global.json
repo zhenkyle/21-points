@@ -11,6 +11,8 @@
                 "weight": "Weight",
                 "bloodPressure": "BloodPressure",
                 "preferences": "Preferences",
+                "point": "Point",
+                "preference": "Preference",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

@@ -83,7 +83,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @OneToOne
     @JsonIgnore
-    private Preferences preferences;
+    private Preference preference;
 
     public Long getId() {
         return id;
@@ -181,12 +181,12 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.authorities = authorities;
     }
 
-    public Preferences getPreferences() {
-    return preferences;
+    public Preference getPreference() {
+    return preference;
     }
 
-    public void setPreferences(Preferences preferences) {
-    this.preferences = preferences;
+    public void setPreference(Preference preference) {
+    this.preference = preference;
     }
 
     @Override
