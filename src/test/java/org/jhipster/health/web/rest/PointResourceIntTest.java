@@ -56,9 +56,8 @@ public class PointResourceIntTest {
 
     private static final Integer DEFAULT_ALCOHOL = 1;
     private static final Integer UPDATED_ALCOHOL = 2;
-
-    private static final Integer DEFAULT_NOTES = 1;
-    private static final Integer UPDATED_NOTES = 2;
+    private static final String DEFAULT_NOTES = "AAAAA";
+    private static final String UPDATED_NOTES = "BBBBB";
 
     @Inject
     private PointRepository pointRepository;
@@ -135,7 +134,7 @@ public class PointResourceIntTest {
                 .andExpect(jsonPath("$.[*].exercise").value(hasItem(DEFAULT_EXERCISE)))
                 .andExpect(jsonPath("$.[*].meals").value(hasItem(DEFAULT_MEALS)))
                 .andExpect(jsonPath("$.[*].alcohol").value(hasItem(DEFAULT_ALCOHOL)))
-                .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)));
+                .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES.toString())));
     }
 
     @Test
@@ -153,7 +152,7 @@ public class PointResourceIntTest {
             .andExpect(jsonPath("$.exercise").value(DEFAULT_EXERCISE))
             .andExpect(jsonPath("$.meals").value(DEFAULT_MEALS))
             .andExpect(jsonPath("$.alcohol").value(DEFAULT_ALCOHOL))
-            .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES));
+            .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES.toString()));
     }
 
     @Test

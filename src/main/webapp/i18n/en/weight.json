@@ -2,21 +2,21 @@
     "21pointsApp": {
         "weight" : {
             "home": {
-                "title": "Weights",
-                "createLabel": "Create a new Weight",
-                "createOrEditLabel": "Create or edit a Weight"
+                "title": "Weight-Ins",
+                "createLabel": "Add Weight",
+                "createOrEditLabel": "Add or edit your Weight"
             },
-            "created": "A new Weight is created with identifier {{ param }}",
-            "updated": "A Weight is updated with identifier {{ param }}",
-            "deleted": "A Weight is deleted with identifier {{ param }}",
+            "created": "Added Successfully!",
+            "updated": "Updated Successfully!",
+            "deleted": "Deleted Successfully!",
             "delete": {
-                "question": "Are you sure you want to delete Weight {{ id }}?"
+                "question": "Are you sure you want to delete this?"
             },
             "detail": {
-                "title": "Weight"
+                "title": "Your Weight"
             },
-            "timestamp": "Timestamp",
-            "weight": "Weight",
+            "timestamp": "Date/Time",
+            "weight": "Weight (lbs)",
             "user": "User"
         }
     }

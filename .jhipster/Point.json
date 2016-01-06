@@ -32,7 +32,7 @@
         {
             "fieldId": 5,
             "fieldName": "notes",
-            "fieldType": "Integer"
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20160106082411",

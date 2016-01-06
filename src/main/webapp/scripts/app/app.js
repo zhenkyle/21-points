@@ -16,8 +16,12 @@ angular.module('21pointsApp', ['LocalStorageModule', 'tmh.dynamicLocale', 'pasca
                 titleKey = $state.$current.data.pageTitle;
             }
             $translate(titleKey || 'global.title').then(function (title) {
-                $window.document.title = title;
-            });
+               $translate('global.title').then(function(appname) {
+                    if (title !== appname) {
+                        $window.document.title = title + " | " + appname;
+                    }
+                });
+             });
         };
         
         $rootScope.ENV = ENV;

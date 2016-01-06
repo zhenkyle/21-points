@@ -25,7 +25,7 @@
             <column name="exercise" type="integer"/>
             <column name="meals" type="integer"/>
             <column name="alcohol" type="integer"/>
-            <column name="notes" type="integer"/>
+            <column name="notes" type="varchar(255)"/>
             <column name="user_id" type="bigint"/>
         </createTable>
         

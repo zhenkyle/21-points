@@ -37,7 +37,7 @@ public class Point implements Serializable {
     private Integer alcohol;
 
     @Column(name = "notes")
-    private Integer notes;
+    private String notes;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -83,11 +83,11 @@ public class Point implements Serializable {
         this.alcohol = alcohol;
     }
 
-    public Integer getNotes() {
+    public String getNotes() {
         return notes;
     }
 
-    public void setNotes(Integer notes) {
+    public void setNotes(String notes) {
         this.notes = notes;
     }
 
