@@ -4,6 +4,12 @@ angular.module('21pointsApp').controller('BloodPressureDialogController',
     ['$scope', '$stateParams', '$uibModalInstance', 'entity', 'BloodPressure', 'User',
         function($scope, $stateParams, $uibModalInstance, entity, BloodPressure, User) {
 
+         // defaults for new entries
+        if (!entity.id) {
+            var now = new Date();
+            entity.timestamp = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes()));
+        }
+
         $scope.bloodPressure = entity;
         $scope.users = User.query();
         $scope.load = function(id) {

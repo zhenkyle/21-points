@@ -2,13 +2,13 @@
     "21pointsApp": {
         "bloodPressure" : {
             "home": {
-                "title": "Blood Pressure Measurements",
+                "title": "Blood Pressure",
                 "createLabel": "Add Reading",
-                "createOrEditLabel": "Add or edit a measurement"
+                "createOrEditLabel": "Edit a Reading"
             },
-            "created": "Added Successfully!",
-            "updated": "Updated Successfully!",
-            "deleted": "Deleted Successfully!",
+            "created": "Blood pressure added successfully.",
+            "updated": "Blood pressure updated successfully.",
+            "deleted": "Blood pressure deleted.",
             "delete": {
                 "question": "Are you sure you want to delete this?"
             },
@@ -18,7 +18,8 @@
             "timestamp": "Date/Time",
             "systolic": "Systolic",
             "diastolic": "Diastolic",
-            "user": "User"
+            "user": "User",
+            "actions": "Actions"
         }
     }
 }
