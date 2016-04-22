@@ -3,7 +3,10 @@ package org.jhipster.health.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import org.jhipster.health.domain.Point;
 import org.jhipster.health.repository.PointRepository;
+import org.jhipster.health.repository.UserRepository;
 import org.jhipster.health.repository.search.PointSearchRepository;
+import org.jhipster.health.security.AuthoritiesConstants;
+import org.jhipster.health.security.SecurityUtils;
 import org.jhipster.health.web.rest.util.HeaderUtil;
 import org.jhipster.health.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
@@ -34,13 +37,15 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class PointResource {
 
     private final Logger log = LoggerFactory.getLogger(PointResource.class);
-        
+
     @Inject
     private PointRepository pointRepository;
-    
+
     @Inject
     private PointSearchRepository pointSearchRepository;
-    
+
+    @Inject
+    private UserRepository userRepository;
     /**
      * POST  /points -> Create a new point.
      */
@@ -52,6 +57,11 @@ public class PointResource {
         log.debug("REST request to save Point : {}", point);
         if (point.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("point", "idexists", "A new point cannot already have an ID")).body(null);
+        }
+        if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
+            log.debug("No user passed in, using current user: {}",
+                SecurityUtils.getCurrentUserLogin());
+                point.setUser(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
         }
         Point result = pointRepository.save(point);
         pointSearchRepository.save(result);
@@ -89,7 +99,7 @@ public class PointResource {
     public ResponseEntity<List<Point>> getAllPoints(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Points");
-        Page<Point> page = pointRepository.findAll(pageable); 
+        Page<Point> page = pointRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/points");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
