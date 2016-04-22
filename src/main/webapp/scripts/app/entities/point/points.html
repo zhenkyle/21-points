@@ -1,22 +1,25 @@
 <div>
-    <h2 translate="21pointsApp.point.home.title">Points</h2>
     <jh-alert></jh-alert>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <button class="btn btn-primary" ui-sref="point.new">
-                    <span class="glyphicon glyphicon-flash"></span> <span translate="21pointsApp.point.home.createLabel">Create a new Point</span>
+    <div class="row">
+        <div class="col-sm-7">
+            <h2 translate="21pointsApp.point.home.title">Points</h2>
+        </div>
+        <div class="col-sm-5 text-right">
+            <form name="searchForm" class="form-inline">
+                <div class="form-group p-r">
+                    <input type="text" id="searchQuery"
+                           class="form-control" ng-model="searchQuery"
+                           placeholder="{{'entity.action.search' | translate}}">
+                </div>
+                <button class="btn btn-info btn-sm" ng-click="search()"
+                        tooltip="{{'entity.action.search' | translate}}">
+                    <i class="glyphicon glyphicon-search"></i>
                 </button>
-            </div>
-            <div class="col-md-8">
-                <form name="searchForm" class="form-inline">
-                    <div class="form-group">
-                        <input type="text" class="form-control" ng-model="searchQuery" id="searchQuery" placeholder="query">
-                    </div>
-                    <button class="btn btn-info" ng-click="search()"><span class="glyphicon glyphicon-search"></span> <span>Search a Point</span>
-                    </button>
-                </form>
-            </div>
+                <button class="btn btn-primary btn-sm" ui-sref="point.new"
+                        tooltip="{{'entity.action.new' | translate}}">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </form>
         </div>
     </div>
 
@@ -24,7 +27,6 @@
         <table class="table table-striped">
             <thead>
                 <tr jh-sort="predicate" ascending="reverse" callback="reset()">
-                    <th jh-sort-by="id"><span translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="date"><span translate="21pointsApp.point.date">Date</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="exercise"><span translate="21pointsApp.point.exercise">Exercise</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="meals"><span translate="21pointsApp.point.meals">Meals</span> <span class="glyphicon glyphicon-sort"></span></th>
@@ -36,31 +38,41 @@
             </thead>
             <tbody infinite-scroll="loadPage(page + 1)" infinite-scroll-disabled="links['last'] == page">
                 <tr ng-repeat="point in points track by point.id">
-                    <td><a ui-sref="point.detail({id:point.id})">{{point.id}}</a></td>
-                        <td>{{point.date | date:'mediumDate'}}</td>
-                    <td>{{point.exercise}}</td>
-                    <td>{{point.meals}}</td>
-                    <td>{{point.alcohol}}</td>
+                    <td>{{point.date | date:'mediumDate'}}</td>
+                    <td class="text-center">
+                        <i class="glyphicon"
+                           ng-class="{'glyphicon-ok text-success': point.exercise,
+'glyphicon-remove text-danger': !point.exercise}"></i>
+                    </td>
+                    <td class="text-center">
+                        <i class="glyphicon"
+                           ng-class="{'glyphicon-ok text-success': point.meals,
+'glyphicon-remove text-danger': !point.meals}"></i>
+                    </td>
+                    <td class="text-center">
+                        <i class="glyphicon"
+                           ng-class="{'glyphicon-ok text-success': point.alcohol,
+'glyphicon-remove text-danger': !point.alcohol}"></i>
+                    </td>
                     <td>{{point.notes}}</td>
                     <td>
                         {{point.user.login}}
                     </td>
                     <td>
-                        <button type="submit"
-                                ui-sref="point.detail({id:point.id})"
-                                class="btn btn-info btn-sm">
-                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span translate="entity.action.view"> View</span>
-                        </button>
-                        <button type="submit"
-                                ui-sref="point.edit({id:point.id})"
-                                class="btn btn-primary btn-sm">
-                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span translate="entity.action.edit"> Edit</span>
-                        </button>
-                        <button type="submit"
-                                ui-sref="point.delete({id:point.id})"
-                                class="btn btn-danger btn-sm">
-                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete"> Delete</span>
-                        </button>
+                        <div class="btn-group m-n">
+                            <button type="submit" tooltip="{{'entity.action.view' | translate}}"
+                                    ui-sref="point.detail({id:point.id})" class="btn btn-info btn-xs">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </button>
+                            <button type="submit" tooltip="{{'entity.action.edit' | translate}}"
+                                    ui-sref="point.edit({id:point.id})" class="btn btn-primary btn-xs">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </button>
+                            <button type="submit" tooltip="{{'entity.action.delete' | translate}}"
+                                    ng-click="delete(point.id)" class="btn btn-danger btn-xs">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             </tbody>
