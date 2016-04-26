@@ -143,8 +143,15 @@ public class PointResourceIntTest {
         // Initialize the database
         pointRepository.saveAndFlush(point);
 
+        // create security-aware mockMvc
+            restPointMockMvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .build();
+
         // Get all the points
-        restPointMockMvc.perform(get("/api/points?sort=id,desc"))
+        restPointMockMvc.perform(get("/api/points?sort=id,desc")
+                .with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(point.getId().intValue())))
