@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -20,4 +21,6 @@ public interface PointRepository extends JpaRepository<Point,Long> {
     Page<Point> findAllForCurrentUser(Pageable pageable);
 
     Page<Point> findAllByOrderByDateDesc(Pageable pageable);
+
+    List<Point> findAllByDateBetween(LocalDate firstDate, LocalDate secondDate);
 }

@@ -7,8 +7,10 @@ import org.jhipster.health.repository.UserRepository;
 import org.jhipster.health.repository.search.PointSearchRepository;
 import org.jhipster.health.security.AuthoritiesConstants;
 import org.jhipster.health.security.SecurityUtils;
+import org.jhipster.health.web.rest.dto.PointsPerWeekDTO;
 import org.jhipster.health.web.rest.util.HeaderUtil;
 import org.jhipster.health.web.rest.util.PaginationUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -22,11 +24,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static java.time.temporal.ChronoField.DAY_OF_WEEK;
+import static java.util.Calendar.MONDAY;
+import static java.util.Calendar.SUNDAY;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
@@ -108,6 +114,31 @@ public class PointResource {
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/points");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * GET /points-this-week -> get all the points for the current week.
+     */
+    @RequestMapping(value = "/points-this-week")
+    @Timed
+    public ResponseEntity<PointsPerWeekDTO> getPointsThisWeek() {
+        // Get current date
+        LocalDate now = LocalDate.now();
+        // Get first day of week
+        LocalDate startOfWeek = now.with(DAY_OF_WEEK, MONDAY);
+        // Get last day of week
+        LocalDate endOfWeek = now.with(DAY_OF_WEEK,SUNDAY);
+        log.debug("Looking for points between: {} and {}", startOfWeek, endOfWeek);
+
+        List<Point> points = pointRepository.findAllByDateBetween(startOfWeek, endOfWeek);
+        // filter by current user and sum the points
+        Integer numPoints = points.stream()
+            .filter(p -> p.getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin()))
+            .mapToInt(p -> p.getExercise() + p.getMeals() + p.getAlcohol())
+            .sum();
+
+        PointsPerWeekDTO count = new PointsPerWeekDTO(startOfWeek, numPoints);
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
     /**

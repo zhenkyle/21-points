@@ -28,6 +28,22 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="progress progress-lg" ng-show="pointsThisWeek.points">
+                            <div class="progress-bar progress-bar-success progress-bar-striped" role=
+                                "progressbar"
+                                 aria-valuenow="{{pointsThisWeek.points}}"
+                                 aria-valuemin="0" aria-valuemax="21" style="width: {{pointsPercentage}}%">
+                                {{pointsThisWeek.points}} / Goal: 10
+                            </div>
+                        </div>
+                        <alert type="info" ng-hide="pointsThisWeek.points">
+                            No points yet this week, better get moving!
+                        </alert>
+                    </div>
+                </div>
+
                 <div class="alert alert-warning" ng-switch-when="false" translate="global.messages.info.authenticated">
                     If you want to <a class="alert-link" href="#/login">sign in</a>, you can try the default accounts:<br/>- Administrator (login="admin" and password="admin") <br/>- User (login="user" and password="user").
                 </div>
