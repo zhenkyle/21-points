@@ -21,5 +21,35 @@ angular.module('21pointsApp')
                         return $translate.refresh();
                     }]
                 }
+            })
+            .state('point.add', {
+                parent: 'point',
+                url: 'add/point',
+                data: {
+                    authorities: ['ROLE_USER'],
+                },
+                onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                    $uibModal.open({
+                        templateUrl: 'scripts/app/entities/point/point-dialog.html',
+                        controller: 'PointDialogController',
+                        size: 'lg',
+                        resolve: {
+                            entity: function () {
+                                return {
+                                    date: null,
+                                    exercise: null,
+                                    meals: null,
+                                    alcohol: null,
+                                    notes: null,
+                                    id: null
+                                };
+                            }
+                        }
+                    }).result.then(function(result) {
+                        $state.go('home', null, { reload: true });
+                    }, function() {
+                        $state.go('home');
+                    })
+                }]
             });
     });

@@ -2,11 +2,13 @@ package org.jhipster.health.web.rest;
 
 import org.jhipster.health.Application;
 import org.jhipster.health.domain.Point;
+import org.jhipster.health.domain.User;
 import org.jhipster.health.repository.PointRepository;
 import org.jhipster.health.repository.UserRepository;
 import org.jhipster.health.repository.search.PointSearchRepository;
 
 
+import org.joda.time.DateTimeConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -235,5 +237,44 @@ public class PointResourceIntTest {
         // Validate the database is empty
         List<Point> points = pointRepository.findAll();
         assertThat(points).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    private void createPointsByWeek(LocalDate thisMonday, LocalDate lastMonday) {
+        User user = userRepository.findOneByLogin("user").get();
+        // Create points in two separate weeks
+        point = new Point(thisMonday.plusDays(2), 1, 1, 1, user);
+        pointRepository.saveAndFlush(point);
+        point = new Point(thisMonday.plusDays(3), 1, 1, 0, user);
+        pointRepository.saveAndFlush(point);
+        point = new Point(lastMonday.plusDays(3), 0, 0, 1, user);
+        pointRepository.saveAndFlush(point);
+        point = new Point(lastMonday.plusDays(4), 1, 1, 0, user);
+        pointRepository.saveAndFlush(point);
+    }
+    @Test
+    @Transactional
+    public void getPointsThisWeek() throws Exception {
+        LocalDate today = new LocalDate();
+        LocalDate thisMonday = today.withDayOfWeek(DateTimeConstants.MONDAY);
+        LocalDate lastMonday = thisMonday.minusWeeks(1);
+        createPointByWeek(thisMonday, lastMonday);
+// create security-aware mockMvc
+        restPointMockMvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .build();
+// Get all the points
+        restPointMockMvc.perform(get("/api/points")
+            .with(user("user").roles("USER")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(4)));
+// Get the points for this week only
+        restPointMockMvc.perform(get("/api/points-this-week")
+            .with(user("user").roles("USER")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.week").value(thisMonday.toString()))
+            .andExpect(jsonPath("$.points").value(5));
     }
 }
