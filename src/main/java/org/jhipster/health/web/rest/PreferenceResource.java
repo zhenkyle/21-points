@@ -2,8 +2,11 @@ package org.jhipster.health.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import org.jhipster.health.domain.Preference;
+import org.jhipster.health.domain.User;
 import org.jhipster.health.repository.PreferenceRepository;
+import org.jhipster.health.repository.UserRepository;
 import org.jhipster.health.repository.search.PreferenceSearchRepository;
+import org.jhipster.health.security.SecurityUtils;
 import org.jhipster.health.web.rest.util.HeaderUtil;
 import org.jhipster.health.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
@@ -35,13 +38,15 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class PreferenceResource {
 
     private final Logger log = LoggerFactory.getLogger(PreferenceResource.class);
-        
+
     @Inject
     private PreferenceRepository preferenceRepository;
-    
+
     @Inject
     private PreferenceSearchRepository preferenceSearchRepository;
-    
+
+    @Inject
+    private UserRepository userRepository;
     /**
      * POST  /preferences -> Create a new preference.
      */
@@ -90,7 +95,7 @@ public class PreferenceResource {
     public ResponseEntity<List<Preference>> getAllPreferences(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Preferences");
-        Page<Preference> page = preferenceRepository.findAll(pageable); 
+        Page<Preference> page = preferenceRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/preferences");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -139,5 +144,23 @@ public class PreferenceResource {
         return StreamSupport
             .stream(preferenceSearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * GET /my-preferences -> get the current user's preferences.
+     */
+    @RequestMapping(value = "/my-preferences")
+    @Timed
+    public ResponseEntity<Preference> getUserPreferences() {
+        String username = SecurityUtils.getCurrentUserLogin();
+        log.debug("REST request to get Preferences : {}", username);
+        User user = userRepository.findOneByLogin(username).get();
+        if (user.getPreference() != null) {
+            return new ResponseEntity<>(user.getPreference(), HttpStatus.OK);
+        } else {
+            Preference defaultPreferences = new Preference();
+            defaultPreferences.setWeeklyGoal(10); // default
+            return new ResponseEntity<>(defaultPreferences, HttpStatus.OK);
+        }
     }
 }

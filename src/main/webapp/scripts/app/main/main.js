@@ -51,5 +51,28 @@ angular.module('21pointsApp')
                         $state.go('home');
                     })
                 }]
+            })
+            .state('preference.add', {
+                parent: 'home',
+                url: '/add/preference',
+                data: {
+                    roles: ['ROLE_USER']
+                },
+                onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                    $uibModal.open({
+                        templateUrl: 'scripts/app/entities/preference/preference-dialog.html',
+                        controller: 'PreferenceDialogController',
+                        size: 'lg',
+                        resolve: {
+                            entity: function (Preference) {
+                                return Preference.user().$promise;
+                            }
+                        }
+                    }).result.then(function(result) {
+                        $state.go('home', null, { reload: true });
+                    }, function() {
+                        $state.go('home');
+                    })
+                }]
             });
     });

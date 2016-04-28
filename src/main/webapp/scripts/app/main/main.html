@@ -33,11 +33,14 @@
                 <div class="row">
                     <div class="col-md-10">
                         <div class="progress progress-lg" ng-show="pointsThisWeek.points">
-                            <div class="progress-bar progress-bar-success progress-bar-striped" role=
-                                "progressbar"
+                            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                                 ng-class="{'progress-bar-success': pointsThisWeek.points >= preferences.weeklyGoal,
+                                    'progress-bar-danger': pointsThisWeek.points < 10,
+                                    'progress-bar-warning': pointsThisWeek.points > 10 &&
+                                        pointsThisWeek.points < preferences.weeklyGoal}"
                                  aria-valuenow="{{pointsThisWeek.points}}"
                                  aria-valuemin="0" aria-valuemax="21" style="width: {{pointsPercentage}}%">
-                                {{pointsThisWeek.points}} / Goal: 10
+                                {{pointsThisWeek.points}} / Goal: {{preferences.weeklyGoal}}
                             </div>
                         </div>
                         <uib-alert type="info" ng-hide="pointsThisWeek.points">
@@ -45,6 +48,14 @@
                         </uib-alert>
                     </div>
                 </div>
+
+                <div class="row">
+                    <p class="m-t-md col-md-10">
+                        <a ui-sref="preference.add" class="pull-right">Edit Preferences</a>
+                        <a ui-sref="history">View History</a>
+                    </p>
+                </div>
+
 
                 <div class="alert alert-warning" ng-switch-when="false" translate="global.messages.info.authenticated">
                     If you want to <a class="alert-link" href="#/login">sign in</a>, you can try the default accounts:<br/>- Administrator (login="admin" and password="admin") <br/>- User (login="user" and password="user").

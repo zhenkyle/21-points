@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('21pointsApp')
-    .controller('MainController', function ($scope, Principal, Point) {
+    .controller('MainController', function ($scope, Principal, Point, Preference) {
         Principal.identity().then(function(account) {
             $scope.account = account;
             $scope.isAuthenticated = Principal.isAuthenticated;
@@ -11,4 +11,8 @@ angular.module('21pointsApp')
             $scope.pointsThisWeek = data;
             $scope.pointsPercentage = (data.points / 21) * 100;
         });
+
+        Preference.user(function(data) {
+            $scope.preferences = data;
+        })
     });
