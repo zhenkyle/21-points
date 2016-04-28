@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.time.temporal.ChronoField.DAY_OF_WEEK;
 import static java.util.Calendar.MONDAY;
 import static org.hamcrest.Matchers.hasItem;
@@ -259,26 +260,29 @@ public class PointResourceIntTest {
     @Transactional
     public void getPointsThisWeek() throws Exception {
         LocalDate today = LocalDate.now();
-        LocalDate thisMonday = today.with(DAY_OF_WEEK, MONDAY);
+        LocalDate thisMonday = today.with(DAY_OF_WEEK, 1);
         LocalDate lastMonday = thisMonday.minusWeeks(1);
         createPointsByWeek(thisMonday, lastMonday);
+
         // create security-aware mockMvc
         restPointMockMvc = MockMvcBuilders
             .webAppContextSetup(context)
             .apply(springSecurity())
             .build();
+
         // Get all the points
         restPointMockMvc.perform(get("/api/points")
             .with(user("user").roles("USER")))
             .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$", hasSize(4)));
+
         // Get the points for this week only
         restPointMockMvc.perform(get("/api/points-this-week")
             .with(user("user").roles("USER")))
             .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.week").value(thisMonday.toString()))
+            .andExpect(jsonPath("$.week").value(thisMonday.format(ISO_LOCAL_DATE)))
             .andExpect(jsonPath("$.points").value(5));
     }
 }

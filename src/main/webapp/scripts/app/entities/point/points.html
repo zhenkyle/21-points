@@ -12,11 +12,11 @@
                            placeholder="{{'entity.action.search' | translate}}">
                 </div>
                 <button class="btn btn-info btn-sm" ng-click="search()"
-                        tooltip="{{'entity.action.search' | translate}}">
+                        uibTooltip="{{'entity.action.search' | translate}}">
                     <i class="glyphicon glyphicon-search"></i>
                 </button>
                 <button class="btn btn-primary btn-sm" ui-sref="point.new"
-                        tooltip="{{'entity.action.new' | translate}}">
+                        uibTooltip="{{'entity.action.new' | translate}}">
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>
             </form>
@@ -60,16 +60,16 @@
                     </td>
                     <td>
                         <div class="btn-group m-n">
-                            <button type="submit" tooltip="{{'entity.action.view' | translate}}"
+                            <button type="submit" uibTooltip="{{'entity.action.view' | translate}}"
                                     ui-sref="point.detail({id:point.id})" class="btn btn-info btn-xs">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             </button>
-                            <button type="submit" tooltip="{{'entity.action.edit' | translate}}"
+                            <button type="submit" uibTooltip="{{'entity.action.edit' | translate}}"
                                     ui-sref="point.edit({id:point.id})" class="btn btn-primary btn-xs">
                                 <span class="glyphicon glyphicon-pencil"></span>
                             </button>
-                            <button type="submit" tooltip="{{'entity.action.delete' | translate}}"
-                                    ng-click="delete(point.id)" class="btn btn-danger btn-xs">
+                            <button type="submit" uibTooltip="{{'entity.action.delete' | translate}}"
+                                    ui-sref="point.delete({id:point.id})" class="btn btn-danger btn-xs">
                                 <span class="glyphicon glyphicon-remove-circle"></span>
                             </button>
                         </div>

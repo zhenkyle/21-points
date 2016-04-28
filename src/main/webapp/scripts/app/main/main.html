@@ -1,25 +1,27 @@
 <div ng-cloak>
     <div class="row">
         <div class="col-md-4">
-            <span class="hipster img-responsive img-rounded"></span>
+            <span class="heart img-responsive img-rounded m-t-md hidden-xs"
+                  uibTooltip="The greatest wealth is Health"></span>
         </div>
         <div class="col-md-8">
-            <h1 translate="main.title">Welcome, Java Hipster!</h1>
-            <p class="lead" translate="main.subtitle">This is your homepage</p>
-            <div ng-switch="isAuthenticated()">
-                <div class="alert alert-success" ng-switch-when="true" translate="main.logged.message" translate-values="{username: '{{account.login}}'}">
-                    Your are logged in as user "{{account.login}}".
-                </div>
+            <h1 ng-if="isAuthenticated() && account.firstName" translate="main.title"
+                translate-values="{name: '{{account.firstName}}'}">Welcome, Java Hipster!</h1>
 
+            <h1 ng-hide="isAuthenticated()">Welcome!</h1>
+
+            <p class="lead" translate="main.subtitle">This is your homepage</p>
+
+            <div ng-switch="isAuthenticated()">
                 <div ng-switch-when="true">
                     <div class="row">
                         <div class="col-md-6 col-xs-5">
-                            <h4 translate="main.point.thisWeek" class="m-t-sm hidden-xs"
-                                translate-values="{date: '{{pointThisWeek.week | date: 'longDate'}}'}">
-                                Points for the week of {{pointThisWeek.week | date: 'longDate'}}:
+                            <h4 translate="main.points.thisWeek" class="m-t-sm hidden-xs"
+                                translate-values="{date: '{{pointsThisWeek.week | date: 'longDate'}}'}">
+                                Points for the week of {{pointsThisWeek.week | date: 'longDate'}}:
                             </h4>
-                            <h4 translate="main.point.thisWeekMobile" class="m-t-sm visible-xs">
-                                Points for {{pointThisWeek.week | date: 'longDate'}}:
+                            <h4 translate="main.points.thisWeekMobile" class="m-t-sm visible-xs">
+                                Points for {{pointsThisWeek.week | date: 'longDate'}}:
                             </h4>
                         </div>
                         <div class="col-md-4 text-right">
@@ -38,9 +40,9 @@
                                 {{pointsThisWeek.points}} / Goal: 10
                             </div>
                         </div>
-                        <alert type="info" ng-hide="pointsThisWeek.points">
+                        <uib-alert type="info" ng-hide="pointsThisWeek.points">
                             No points yet this week, better get moving!
-                        </alert>
+                        </uib-alert>
                     </div>
                 </div>
 

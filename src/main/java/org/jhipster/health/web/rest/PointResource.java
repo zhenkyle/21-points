@@ -125,9 +125,9 @@ public class PointResource {
         // Get current date
         LocalDate now = LocalDate.now();
         // Get first day of week
-        LocalDate startOfWeek = now.with(DAY_OF_WEEK, MONDAY);
+        LocalDate startOfWeek = now.with(DAY_OF_WEEK, 1);
         // Get last day of week
-        LocalDate endOfWeek = now.with(DAY_OF_WEEK,SUNDAY);
+        LocalDate endOfWeek = now.with(DAY_OF_WEEK,7);
         log.debug("Looking for points between: {} and {}", startOfWeek, endOfWeek);
 
         List<Point> points = pointRepository.findAllByDateBetween(startOfWeek, endOfWeek);
@@ -136,7 +136,7 @@ public class PointResource {
             .filter(p -> p.getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin()))
             .mapToInt(p -> p.getExercise() + p.getMeals() + p.getAlcohol())
             .sum();
-
+        log.debug("numPoints: {}", numPoints);
         PointsPerWeekDTO count = new PointsPerWeekDTO(startOfWeek, numPoints);
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
