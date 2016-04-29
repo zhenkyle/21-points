@@ -2,10 +2,11 @@ package org.jhipster.health.domain;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import java.time.LocalDate;
+import org.hibernate.annotations.Type;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -25,12 +26,17 @@ public class BloodPressure implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
+    @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
+    @Convert(disableConversion = true)
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
+    @NotNull
     @Column(name = "systolic")
     private Integer systolic;
 
+    @NotNull
     @Column(name = "diastolic")
     private Integer diastolic;
 
