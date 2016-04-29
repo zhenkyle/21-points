@@ -4,6 +4,8 @@ import com.codahale.metrics.annotation.Timed;
 import org.jhipster.health.domain.BloodPressure;
 import org.jhipster.health.repository.BloodPressureRepository;
 import org.jhipster.health.repository.search.BloodPressureSearchRepository;
+import org.jhipster.health.security.SecurityUtils;
+import org.jhipster.health.web.rest.dto.BloodPressureByPeriod;
 import org.jhipster.health.web.rest.util.HeaderUtil;
 import org.jhipster.health.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
@@ -19,9 +21,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -34,13 +40,13 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class BloodPressureResource {
 
     private final Logger log = LoggerFactory.getLogger(BloodPressureResource.class);
-        
+
     @Inject
     private BloodPressureRepository bloodPressureRepository;
-    
+
     @Inject
     private BloodPressureSearchRepository bloodPressureSearchRepository;
-    
+
     /**
      * POST  /bloodPressures -> Create a new bloodPressure.
      */
@@ -89,7 +95,7 @@ public class BloodPressureResource {
     public ResponseEntity<List<BloodPressure>> getAllBloodPressures(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of BloodPressures");
-        Page<BloodPressure> page = bloodPressureRepository.findAll(pageable); 
+        Page<BloodPressure> page = bloodPressureRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/bloodPressures");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -138,5 +144,29 @@ public class BloodPressureResource {
         return StreamSupport
             .stream(bloodPressureSearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * GET /bp-by-days -> get all the blood pressure readings by last x days.
+     */
+    @RequestMapping(value = "/bp-by-days/{days}")
+    @Timed
+    public ResponseEntity<BloodPressureByPeriod> getByDays(@PathVariable int days) {
+        LocalDate today = LocalDate.now();
+        LocalDate previousDate = today.minusDays(days);
+        LocalDateTime daysAgo = previousDate.atTime(LocalTime.now());
+        LocalDateTime rightNow = today.atTime(LocalTime.now());
+
+        List<BloodPressure> readings = bloodPressureRepository
+            .findAllByTimestampBetweenOrderByTimestampDesc(daysAgo, rightNow);
+        BloodPressureByPeriod response = new BloodPressureByPeriod("Last " + days + " Days",
+            filterByUser(readings));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    private List<BloodPressure> filterByUser(List<BloodPressure> readings) {
+        Stream<BloodPressure> userReadings = readings.stream()
+            .filter(bp -> bp.getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin()));
+        return userReadings.collect(Collectors.toList());
     }
 }
