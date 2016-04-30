@@ -27,17 +27,15 @@ public class BloodPressure implements Serializable {
     private Long id;
 
     @NotNull
-    @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
-    @Convert(disableConversion = true)
-    @Column(name = "timestamp")
+    @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
 
     @NotNull
-    @Column(name = "systolic")
+    @Column(name = "systolic", nullable = false)
     private Integer systolic;
 
     @NotNull
-    @Column(name = "diastolic")
+    @Column(name = "diastolic", nullable = false)
     private Integer diastolic;
 
     @ManyToOne
