@@ -22,7 +22,8 @@ import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -154,8 +155,8 @@ public class BloodPressureResource {
     public ResponseEntity<BloodPressureByPeriod> getByDays(@PathVariable int days) {
         LocalDate today = LocalDate.now();
         LocalDate previousDate = today.minusDays(days);
-        LocalDateTime daysAgo = previousDate.atTime(LocalTime.now());
-        LocalDateTime rightNow = today.atTime(LocalTime.now());
+        ZonedDateTime daysAgo = ZonedDateTime.of(previousDate.atTime(LocalTime.now()), ZoneId.systemDefault());
+        ZonedDateTime rightNow = today.atTime(LocalTime.now()).atZone(ZoneId.systemDefault());
 
         List<BloodPressure> readings = bloodPressureRepository
             .findAllByTimestampBetweenOrderByTimestampDesc(daysAgo, rightNow);

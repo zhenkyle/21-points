@@ -8,7 +8,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -28,7 +28,7 @@ public class BloodPressure implements Serializable {
 
     @NotNull
     @Column(name = "timestamp", nullable = false)
-    private LocalDateTime timestamp;
+    private ZonedDateTime timestamp;
 
     @NotNull
     @Column(name = "systolic", nullable = false)
@@ -44,7 +44,7 @@ public class BloodPressure implements Serializable {
 
     public BloodPressure() {}
 
-    public BloodPressure(LocalDateTime dateTime, Integer systolic, Integer diastolic, User user) {
+    public BloodPressure(ZonedDateTime dateTime, Integer systolic, Integer diastolic, User user) {
         this.timestamp = dateTime;
         this.systolic = systolic;
         this.diastolic = diastolic;
@@ -59,11 +59,11 @@ public class BloodPressure implements Serializable {
         this.id = id;
     }
 
-    public LocalDateTime getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(ZonedDateTime timestamp) {
         this.timestamp = timestamp;
     }
 

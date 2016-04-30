@@ -29,8 +29,9 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,8 +55,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BloodPressureResourceIntTest {
 
 
-    private static final LocalDateTime DEFAULT_TIMESTAMP = LocalDate.ofEpochDay(0L).atStartOfDay();
-    private static final LocalDateTime UPDATED_TIMESTAMP = LocalDateTime.now(ZoneId.systemDefault());
+    private static final ZonedDateTime DEFAULT_TIMESTAMP =
+        ZonedDateTime.of(LocalDate.ofEpochDay(0L).atStartOfDay(),ZoneId.of("UTC"));
+    private static final ZonedDateTime UPDATED_TIMESTAMP = ZonedDateTime.now(ZoneId.of("UTC"));
+    private static final String DEFAULT_TIMESTAMP_STR =
+        DEFAULT_TIMESTAMP.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
 
     private static final Integer DEFAULT_SYSTOLIC = 1;
     private static final Integer UPDATED_SYSTOLIC = 2;
@@ -136,7 +140,7 @@ public class BloodPressureResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.[*].id").value(hasItem(bloodPressure.getId().intValue())))
-            .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
+            .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP_STR)))
             .andExpect(jsonPath("$.[*].systolic").value(hasItem(DEFAULT_SYSTOLIC)))
             .andExpect(jsonPath("$.[*].diastolic").value(hasItem(DEFAULT_DIASTOLIC)));
     }
@@ -152,7 +156,7 @@ public class BloodPressureResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(bloodPressure.getId().intValue()))
-            .andExpect(jsonPath("$.timestamp").value(DEFAULT_TIMESTAMP.toString()))
+            .andExpect(jsonPath("$.timestamp").value(DEFAULT_TIMESTAMP_STR))
             .andExpect(jsonPath("$.systolic").value(DEFAULT_SYSTOLIC))
             .andExpect(jsonPath("$.diastolic").value(DEFAULT_DIASTOLIC));
     }
@@ -210,7 +214,7 @@ public class BloodPressureResourceIntTest {
         assertThat(bloodPressures).hasSize(databaseSizeBeforeDelete - 1);
     }
 
-    private void createBloodPressureByMonth(LocalDateTime firstOfMonth, LocalDateTime
+    private void createBloodPressureByMonth(ZonedDateTime firstOfMonth, ZonedDateTime
         firstDayOfLastMonth) {
         User user = userRepository.findOneByLogin("user").get();
         // this month
@@ -233,9 +237,9 @@ public class BloodPressureResourceIntTest {
     @Test
     @Transactional
     public void getBloodPressureForLast30Days() throws Exception {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime firstOfMonth = now.withDayOfMonth(1);
-        LocalDateTime firstDayOfLastMonth = firstOfMonth.minusMonths(1);
+        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime firstOfMonth = now.withDayOfMonth(1);
+        ZonedDateTime firstDayOfLastMonth = firstOfMonth.minusMonths(1);
         createBloodPressureByMonth(firstOfMonth, firstDayOfLastMonth);
 
         // create security-aware mockMvc

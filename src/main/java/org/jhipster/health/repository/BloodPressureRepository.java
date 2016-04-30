@@ -4,7 +4,7 @@ import org.jhipster.health.domain.BloodPressure;
 
 import org.springframework.data.jpa.repository.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -14,6 +14,6 @@ public interface BloodPressureRepository extends JpaRepository<BloodPressure,Lon
 
     @Query("select bloodPressure from BloodPressure bloodPressure where bloodPressure.user.login = ?#{principal.username}")
     List<BloodPressure> findByUserIsCurrentUser();
-    List<BloodPressure> findAllByTimestampBetweenOrderByTimestampDesc(LocalDateTime firstDate,
-                                                                      LocalDateTime secondDate);
+    List<BloodPressure> findAllByTimestampBetweenOrderByTimestampDesc(ZonedDateTime firstDate,
+                                                                      ZonedDateTime secondDate);
 }
