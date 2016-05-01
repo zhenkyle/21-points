@@ -263,6 +263,6 @@ public class BloodPressureResourceIntTest {
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.period").value("Last 30 Days"))
             .andExpect(jsonPath("$.readings.[*].systolic").value(hasItem(120)))
-            .andExpect(jsonPath("$.readings.[*].diastolic").value(hasItem(69)));
+            .andExpect(jsonPath("$.readings.[*].diastolic").value(hasItem(75)));
     }
 }

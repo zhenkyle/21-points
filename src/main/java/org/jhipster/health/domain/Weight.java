@@ -2,10 +2,11 @@ package org.jhipster.health.domain;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,15 +25,25 @@ public class Weight implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "timestamp")
-    private LocalDate timestamp;
+    @NotNull
+    @Column(name = "timestamp", nullable = false)
+    private ZonedDateTime timestamp;
 
-    @Column(name = "weight")
-    private Integer weight;
+    @NotNull
+    @Column(name = "weight", nullable = false)
+    private Double weight;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Weight() {}
+
+    public Weight(ZonedDateTime timestamp, Double weight, User user) {
+        this.timestamp = timestamp;
+        this.weight = weight;
+        this.user = user;
+    }
 
     public Long getId() {
         return id;
@@ -42,19 +53,19 @@ public class Weight implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(ZonedDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    public Integer getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(Integer weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
     }
 
