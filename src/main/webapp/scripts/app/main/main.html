@@ -56,6 +56,16 @@
                     </p>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-10">
+                        <span ng-if="bpReadings.readings.length">
+                            <nvd3 options="bpOptions" data="bpData" class="with-3d-shadow with-transitions"></nvd3>
+                        </span>
+                        <span ng-if="!bpReadings.readings.length">
+                            <alert type="info">No blood pressure readings found.</alert>
+                        </span>
+                    </div>
+                </div>
 
                 <div class="alert alert-warning" ng-switch-when="false" translate="global.messages.info.authenticated">
                     If you want to <a class="alert-link" href="#/login">sign in</a>, you can try the default accounts:<br/>- Administrator (login="admin" and password="admin") <br/>- User (login="user" and password="user").
