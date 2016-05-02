@@ -18,6 +18,9 @@
         "points": {
             "thisWeek": "Points for the week of {{date}}:",
             "thisWeekMobile": "Points:"
-        }
+        },
+        "bloodPressure": "Blood Pressure:",
+        "bloodPressureMobile": "BP:",
+        "weight": "Weight:"
     }
 }

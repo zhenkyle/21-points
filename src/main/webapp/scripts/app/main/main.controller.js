@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('21pointsApp')
-    .controller('MainController', function ($scope, Principal, Point, Preference, BloodPressure, Chart) {
+    .controller('MainController', function ($scope, Principal, Point, Preference, BloodPressure, Chart, Weight) {
         Principal.identity().then(function(account) {
             $scope.account = account;
             $scope.isAuthenticated = Principal.isAuthenticated;
@@ -44,5 +44,32 @@ angular.module('21pointsApp')
                     key: 'Diastolic',
                     color: '#03a9f4'
                 }]; }
+        });
+
+        Weight.last30Days(function(weights) {
+            $scope.weights = weights;
+            if (weights.weighIns.length) {
+                $scope.weightOptions = angular.copy(Chart.getBpChartConfig());
+                $scope.weightOptions.title.text = weights.period;
+                $scope.weightOptions.chart.yAxis.axisLabel = "Weight";
+                var weightValues = [];
+                var values = [];
+                weights.weighIns.forEach(function (item) {
+                    weightValues.push({
+                        x: new Date(item.timestamp),
+                        y: item.weight
+                    });
+                    values.push(item.weight);
+                });
+                $scope.weightData = [{
+                    values: weightValues,
+                    key: 'Weight',
+                    color: '#ffeb3b',
+                    area: true
+                }];
+                // set y scale to be 10 more than max and min
+                $scope.weightOptions.chart.yDomain = [Math.min.apply(Math, values) - 10, Math.max.apply(Math, values) + 10];
+            }
         })
+
     });

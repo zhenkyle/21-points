@@ -52,6 +52,52 @@ angular.module('21pointsApp')
                     })
                 }]
             })
+            .state('weight.add', {
+                url: 'add/weight',
+                parent: 'home',
+                data: {
+                    roles: ['ROLE_USER']
+                },
+                onEnter: ['$stateParams', '$state', '$modal', function ($stateParams, $state, $modal) {
+                    $modal.open({
+                        templateUrl: 'scripts/app/entities/weight/weight-dialog.html',
+                        controller: 'WeightDialogController',
+                        size: 'lg',
+                        resolve: {
+                            entity: function () {
+                                return {timestamp: null, weight: null, id: null};
+                            }
+                        }
+                    }).result.then(function (result) {
+                        $state.go('home', null, {reload: true});
+                    }, function () {
+                        $state.go('home');
+                    })
+                }]
+            })
+            .state('bloodPressure.add', {
+                parent: 'home',
+                url: 'add/bp',
+                data: {
+                    roles: ['ROLE_USER']
+                },
+                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
+                    $modal.open({
+                        templateUrl: 'scripts/app/entities/bloodPressure/bloodPressure-dialog.html',
+                        controller: 'BloodPressureDialogController',
+                        size: 'lg',
+                        resolve: {
+                            entity: function () {
+                                return {timestamp: null, systolic: null, diastolic: null, id: null};
+                            }
+                        }
+                    }).result.then(function(result) {
+                        $state.go('home', null, { reload: true });
+                    }, function() {
+                        $state.go('home');
+                    })
+                }]
+            })
             .state('preference.add', {
                 parent: 'home',
                 url: '/add/preference',
